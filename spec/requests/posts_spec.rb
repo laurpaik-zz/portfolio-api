@@ -31,9 +31,9 @@ RSpec.describe 'Posts API' do
     it 'lists all posts' do
       get '/posts'
       expect(response).to be_success
-      posts_response = JSON.parse(response.body)
+      posts_response = JSON.parse(response.body)['posts']
       expect(posts_response.length).to eq(posts.count)
-      expect(posts_response.first['title']).to eq(post['title'])
+      expect(posts_response.first['title']).to eq(post.title)
     end
   end
 end

@@ -20,7 +20,7 @@ require 'rails_helper'
 # Message expectations are only used when there is no simpler way to specify
 # that an instance is receiving a specific message.
 
-RSpec.describe PostsController, type: :controller do
+RSpec.describe PostsController do
 
   # This should return the minimal set of attributes required to create a valid
   # Post. As you add validations to Post, be sure to
@@ -38,11 +38,42 @@ RSpec.describe PostsController, type: :controller do
   # PostsController. Be sure to keep this updated too.
   let(:valid_session) { {} }
 
+  def post_params
+    {
+      title: 'blah',
+      body: 'blahblah',
+      date_posted: '2017-06-12'
+    }
+  end
+
+  def post
+    Post.first
+  end
+
+  before(:all) do
+    Post.create!(post_params)
+  end
+
+  after(:all) do
+    Post.delete_all
+  end
+
   describe "GET #index" do
-    it "assigns all posts as @posts" do
-      post = Post.create! valid_attributes
-      get :index, params: {}, session: valid_session
-      expect(assigns(:posts)).to eq([post])
+    # it "assigns all posts as @posts" do
+    #   post = Post.create! valid_attributes
+    #   get :index, params: {}, session: valid_session
+    #   expect(assigns(:posts)).to eq([post])
+    # end
+    before(:each) { get :index }
+
+    it 'is successful' do
+      expect(response.status).to eq(200)
+    end
+
+    it 'renders a JSON response' do
+      posts_collection = JSON.parse(response.body)['posts']
+      expect(posts_collection).not_to be_nil
+      expect(posts_collection.first['title']).to eq(post.title)
     end
   end
 
