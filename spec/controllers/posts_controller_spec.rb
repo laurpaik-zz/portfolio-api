@@ -174,19 +174,30 @@ RSpec.describe PostsController do
     end
   end
 
-  describe "DELETE #destroy" do
-    it "destroys the requested post" do
-      post = Post.create! valid_attributes
-      expect {
-        delete :destroy, params: {id: post.to_param}, session: valid_session
-      }.to change(Post, :count).by(-1)
+  describe 'DELETE #destroy' do
+    it 'is successful' do
+      post_id = post.id
+      delete :destroy, params: { id: post.id }
+      expect { Post.find(post_id) }
+        .to raise_error(ActiveRecord::RecordNotFound)
     end
 
-    it "redirects to the posts list" do
-      post = Post.create! valid_attributes
-      delete :destroy, params: {id: post.to_param}, session: valid_session
-      expect(response).to redirect_to(posts_url)
+    it 'returns an empty response' do
+      delete :destroy, params: { id: post.id }
+      expect(response.status).to eq(204)
+      expect(response.body).to be_empty
     end
+    # it "destroys the requested post" do
+    #   post = Post.create! valid_attributes
+    #   expect {
+    #     delete :destroy, params: {id: post.to_param}, session: valid_session
+    #   }.to change(Post, :count).by(-1)
+    # end
+
+    # it "redirects to the posts list" do
+    #   post = Post.create! valid_attributes
+    #   delete :destroy, params: {id: post.to_param}, session: valid_session
+    #   expect(response).to redirect_to(posts_url)
+    # end
   end
-
 end

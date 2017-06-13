@@ -46,4 +46,15 @@ RSpec.describe 'Posts API' do
       expect(post_response['title']).to eq(post.title)
     end
   end
+
+  describe 'DELETE /posts/:id' do
+    it 'deletes a post' do
+      post_id = post.id
+      delete "/posts/#{post.id}"
+      expect(response).to be_success
+      expect(response.body).to be_empty
+      expect { Post.find(post_id) }
+        .to raise_error(ActiveRecord::RecordNotFound)
+    end
+  end
 end
