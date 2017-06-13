@@ -36,4 +36,14 @@ RSpec.describe 'Posts API' do
       expect(posts_response.first['title']).to eq(post.title)
     end
   end
+
+  describe 'GET /posts/:id' do
+    it 'shows one post' do
+      get "/posts/#{post.id}"
+      expect(response).to be_success
+      post_response = JSON.parse(response.body)['post']
+      expect(post_response['id']).to eq(post.id)
+      expect(post_response['title']).to eq(post.title)
+    end
+  end
 end
