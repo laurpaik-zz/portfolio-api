@@ -46,7 +46,7 @@ RSpec.describe PostsController do
     }
   end
 
-  def post
+  def firstPost
     Post.first
   end
 
@@ -58,7 +58,7 @@ RSpec.describe PostsController do
     Post.delete_all
   end
 
-  describe "GET #index" do
+  describe 'GET #index' do
     # it "assigns all posts as @posts" do
     #   post = Post.create! valid_attributes
     #   get :index, params: {}, session: valid_session
@@ -73,15 +73,27 @@ RSpec.describe PostsController do
     it 'renders a JSON response' do
       posts_collection = JSON.parse(response.body)['posts']
       expect(posts_collection).not_to be_nil
-      expect(posts_collection.first['title']).to eq(post.title)
+      expect(posts_collection.first['title']).to eq(firstPost.title)
     end
   end
 
-  describe "GET #show" do
-    it "assigns the requested post as @post" do
-      post = Post.create! valid_attributes
-      get :show, params: {id: post.to_param}, session: valid_session
-      expect(assigns(:post)).to eq(post)
+  describe 'GET #show' do
+    before(:each) { get :show, params: { id: firstPost.id } }
+    # it "assigns the requested post as @post" do
+    #   post = Post.create! valid_attributes
+    #   get :show, params: {id: post.to_param}, session: valid_session
+    #   expect(assigns(:post)).to eq(post)
+    # end
+
+    it 'is successful' do
+      expect(response.status).to eq(200)
+    end
+
+    it 'renders a JSON response' do
+      post_wanted = JSON.parse(response.body)['post']
+      expect(post_wanted).not_to be_nil
+      expect(post_wanted['id']).to eq(firstPost['id'])
+      expect(post_wanted['title']).to eq(firstPost['title'])
     end
   end
 
@@ -101,36 +113,56 @@ RSpec.describe PostsController do
   # end
 
   describe "POST #create" do
-    context "with valid params" do
-      it "creates a new Post" do
-        expect {
-          post :create, params: {post: valid_attributes}, session: valid_session
-        }.to change(Post, :count).by(1)
-      end
-
-      it "assigns a newly created post as @post" do
-        post :create, params: {post: valid_attributes}, session: valid_session
-        expect(assigns(:post)).to be_a(Post)
-        expect(assigns(:post)).to be_persisted
-      end
-
-      it "redirects to the created post" do
-        post :create, params: {post: valid_attributes}, session: valid_session
-        expect(response).to redirect_to(Post.last)
-      end
+    def post_new
+      {
+        title: 'Never Gonna',
+        body: 'Give You Up',
+        date_posted: '2017-06-14'
+      }
     end
 
-    context "with invalid params" do
-      it "assigns a newly created but unsaved post as @post" do
-        post :create, params: {post: invalid_attributes}, session: valid_session
-        expect(assigns(:post)).to be_a_new(Post)
-      end
-
-      it "re-renders the 'new' template" do
-        post :create, params: {post: invalid_attributes}, session: valid_session
-        expect(response).to render_template("new")
-      end
+    before(:each) do
+      post :create, params: { post: post_new }, format: :json
     end
+
+    it 'is successful' do
+      expect(response.status).to eq(201)
+    end
+
+    it 'renders a JSON response' do
+      post_response = JSON.parse(response.body)
+      expect(post_response).not_to be_nil
+    end
+    # context "with valid params" do
+    #   it "creates a new Post" do
+    #     expect {
+    #       post :create, params: {post: valid_attributes}, session: valid_session
+    #     }.to change(Post, :count).by(1)
+    #   end
+    #
+    #   it "assigns a newly created post as @post" do
+    #     post :create, params: {post: valid_attributes}, session: valid_session
+    #     expect(assigns(:post)).to be_a(Post)
+    #     expect(assigns(:post)).to be_persisted
+    #   end
+    #
+    #   it "redirects to the created post" do
+    #     post :create, params: {post: valid_attributes}, session: valid_session
+    #     expect(response).to redirect_to(Post.last)
+    #   end
+    # end
+    #
+    # context "with invalid params" do
+    #   it "assigns a newly created but unsaved post as @post" do
+    #     post :create, params: {post: invalid_attributes}, session: valid_session
+    #     expect(assigns(:post)).to be_a_new(Post)
+    #   end
+    #
+    #   it "re-renders the 'new' template" do
+    #     post :create, params: {post: invalid_attributes}, session: valid_session
+    #     expect(response).to render_template("new")
+    #   end
+    # end
   end
 
   describe "PUT #update" do
@@ -176,14 +208,14 @@ RSpec.describe PostsController do
 
   describe 'DELETE #destroy' do
     it 'is successful' do
-      post_id = post.id
-      delete :destroy, params: { id: post.id }
+      post_id = firstPost.id
+      delete :destroy, params: { id: firstPost.id }
       expect { Post.find(post_id) }
         .to raise_error(ActiveRecord::RecordNotFound)
     end
 
     it 'returns an empty response' do
-      delete :destroy, params: { id: post.id }
+      delete :destroy, params: { id: firstPost.id }
       expect(response.status).to eq(204)
       expect(response.body).to be_empty
     end
