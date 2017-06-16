@@ -17,34 +17,34 @@ class PostsController < OpenReadController
 
   # POST /posts
   def create
-    # @post = current_user.posts.build(post_params)
-    #
-    # if @post.save
-    #   render json: @post, status: :created
-    # else
-    #   render json: @post.errors, status: :unprocessable_entity
-    # end
+    @post = current_user.posts.build(post_params)
+
+    if @post.save
+      render json: @post, status: :created
+    else
+      render json: @post.errors, status: :unprocessable_entity
+    end
   end
 
   # PATCH/PUT /posts/1
   def update
-    # if @post.update(post_params)
-    #   head :no_content
-    # else
-    #   render json: @post.errors, status: :unprocessable_entity
-    # end
+    if @post.update(post_params)
+      head :no_content
+    else
+      render json: @post.errors, status: :unprocessable_entity
+    end
   end
 
   # DELETE /posts/1
   def destroy
-    # @post.destroy
-    #
-    # head :no_content
+    @post.destroy
+
+    head :no_content
   end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_post
-    @post = current_user.examples.find(params[:id])
+    @post = current_user.posts.find(params[:id])
   end
   private :set_post
 
