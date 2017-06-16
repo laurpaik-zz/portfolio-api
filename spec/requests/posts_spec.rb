@@ -81,21 +81,26 @@ RSpec.describe 'Posts API' do
   end
 
   describe 'POST /posts' do
-    skip 'creates a post' do
-      def post_new
-        {
-          title: 'Never Gonna',
-          body: 'Give You Up',
-          date_posted: '2017-06-13'
-        }
-      end
+    def post_new
+      {
+        title: 'Never Gonna',
+        body: 'Give You Up',
+        date_posted: '2017-06-13'
+      }
+    end
 
-      post '/posts', params: { post: post_new }
+    before(:each) do
+      post '/posts', params: { post: post_new }, headers: headers
+    end
 
-      expect(response).to be_success
-      post_response = JSON.parse(response.body)
-      expect(post_response['title']).to eq(post_new['title'])
-      expect(post_response['id']).to_not be_nil
+    it 'is successful' do
+      expect(response.status).to eq(201)
+    end
+
+    it 'renders a JSON response' do
+      post_response = JSON.parse(response.body)['post']
+      expect(post_response['title']).to eq(post_new[:title])
+      expect(post_response['id']).not_to be_nil
     end
   end
 end
