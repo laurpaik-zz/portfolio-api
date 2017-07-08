@@ -20,7 +20,7 @@ class TechnologiesController < ApplicationController
     @technology = Technology.new(technology_params)
 
     if @technology.save
-      render json: @technology, status: :created, location: @technology
+      render json: @technology, status: :created
     else
       render json: @technology.errors, status: :unprocessable_entity
     end
@@ -40,14 +40,15 @@ class TechnologiesController < ApplicationController
     @technology.destroy
   end
 
-  private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_technology
-      @technology = Technology.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_technology
+    @technology = Technology.find(params[:id])
+  end
+  private :set_technology
 
-    # Only allow a trusted parameter "white list" through.
-    def technology_params
-      params.require(:technology).permit(:name, :link)
-    end
+  # Only allow a trusted parameter "white list" through.
+  def technology_params
+    params.require(:technology).permit(:name, :link)
+  end
+  private :technology_params
 end
