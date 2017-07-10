@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-class TechnologiesController < ApplicationController
-  before_action :set_technology, only: [:show, :update, :destroy]
+class TechnologiesController < OpenReadController
+  before_action :set_technology, only: [:update, :destroy]
 
   # GET /technologies
   def index
@@ -12,12 +12,12 @@ class TechnologiesController < ApplicationController
 
   # GET /technologies/1
   def show
-    render json: @technology
+    render json: Technology.find(params[:id])
   end
 
   # POST /technologies
   def create
-    @technology = Technology.new(technology_params)
+    @technology = current_user.technologies.build(technology_params)
 
     if @technology.save
       render json: @technology, status: :created
@@ -38,11 +38,13 @@ class TechnologiesController < ApplicationController
   # DELETE /technologies/1
   def destroy
     @technology.destroy
+
+    head :no_content
   end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_technology
-    @technology = Technology.find(params[:id])
+    @technology = current_user.technologies.find(params[:id])
   end
   private :set_technology
 
