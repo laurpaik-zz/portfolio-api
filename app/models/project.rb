@@ -2,6 +2,9 @@
 
 class Project < ApplicationRecord
   belongs_to :user
+  has_many :technologies, through: :tools
+  has_many :tools
+
   validates :title, presence: true
   validates :link, presence: true
   validates :front_end, presence: true
