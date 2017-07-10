@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170710184307) do
+ActiveRecord::Schema.define(version: 20170710190754) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -55,6 +55,15 @@ ActiveRecord::Schema.define(version: 20170710184307) do
     t.index ["user_id"], name: "index_technologies_on_user_id", using: :btree
   end
 
+  create_table "tools", force: :cascade do |t|
+    t.integer  "project_id",    null: false
+    t.integer  "technology_id", null: false
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.index ["project_id"], name: "index_tools_on_project_id", using: :btree
+    t.index ["technology_id"], name: "index_tools_on_technology_id", using: :btree
+  end
+
   create_table "users", force: :cascade do |t|
     t.string   "email",           null: false
     t.string   "token",           null: false
@@ -69,4 +78,6 @@ ActiveRecord::Schema.define(version: 20170710184307) do
   add_foreign_key "posts", "users"
   add_foreign_key "projects", "users"
   add_foreign_key "technologies", "users"
+  add_foreign_key "tools", "projects"
+  add_foreign_key "tools", "technologies"
 end

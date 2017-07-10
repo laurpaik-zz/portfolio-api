@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  resources :tools, except: [:new, :edit]
   resources :projects, except: [:new, :edit]
   resources :technologies, except: [:new, :edit]
   resources :posts, except: [:new, :edit]

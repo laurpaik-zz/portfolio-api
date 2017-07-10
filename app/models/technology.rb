@@ -2,6 +2,8 @@
 
 class Technology < ApplicationRecord
   belongs_to :user
+  has_many :projects, through: :tools
+  has_many :tools
+
   validates :name, presence: true
-  # validates :link, presence: true
 end
