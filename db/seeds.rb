@@ -8,10 +8,11 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
-Post.create(title: 'blah', body: 'blahblah', date_posted: '2017-06-12')
 User.create(email: 'la@la.com', password: 'asdf', password_confirmation: 'asdf')
-Technology.create(name: 'Ember.js', link: 'emberjs.com')
-Project.create(title: 'Need-a-Couch',
+Technology.create(user_id: 1, name: 'Ember.js', link: 'emberjs.com')
+Post.create(user_id: 1, title: 'blah', body: 'blahblah', date_posted: '2017-06-12')
+Project.create(user_id: 1,
+               title: 'Need-a-Couch',
                link: 'https://laurpaik.github.io/need-a-couch/',
                front_end: 'https://github.com/laurpaik/need-a-couch',
                back_end: 'https://github.com/laurpaik/need-a-couch-api',

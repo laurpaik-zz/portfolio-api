@@ -38,6 +38,8 @@ class ProjectsController < OpenReadController
   # DELETE /projects/1
   def destroy
     @project.destroy
+
+    head :no_content
   end
 
   # Use callbacks to share common setup or constraints between actions.
