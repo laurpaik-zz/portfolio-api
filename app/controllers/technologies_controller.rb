@@ -29,7 +29,7 @@ class TechnologiesController < ApplicationController
   # PATCH/PUT /technologies/1
   def update
     if @technology.update(technology_params)
-      render json: @technology
+      head :no_content
     else
       render json: @technology.errors, status: :unprocessable_entity
     end
